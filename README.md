@@ -1,83 +1,92 @@
-# React + Vite + Hono + Cloudflare Workers
+# Polylender - Decentralized P2P Lending Protocol
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/vite-react-template)
+Polylender is a decentralized peer-to-peer lending protocol that enables users to lend and borrow assets directly from each other without intermediaries.
 
-This template provides a minimal setup for building a React application with TypeScript and Vite, designed to run on Cloudflare Workers. It features hot module replacement, ESLint integration, and the flexibility of Workers deployments.
+## Features
 
-![React + TypeScript + Vite + Cloudflare Workers](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/fc7b4b62-442b-4769-641b-ad4422d74300/public)
+- Direct P2P lending and borrowing
+- Multiple asset support
+- Customizable loan terms
+- Responsive and modern UI
+- Secure wallet integration
+- Real-time transaction updates
 
-<!-- dash-content-start -->
+## Tech Stack
 
-🚀 Supercharge your web development with this powerful stack:
-
-- [**React**](https://react.dev/) - A modern UI library for building interactive interfaces
-- [**Vite**](https://vite.dev/) - Lightning-fast build tooling and development server
-- [**Hono**](https://hono.dev/) - Ultralight, modern backend framework
-- [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform for global deployment
-
-### ✨ Key Features
-
-- 🔥 Hot Module Replacement (HMR) for rapid development
-- 📦 TypeScript support out of the box
-- 🛠️ ESLint configuration included
-- ⚡ Zero-config deployment to Cloudflare's global network
-- 🎯 API routes with Hono's elegant routing
-- 🔄 Full-stack development setup
-
-Get started in minutes with local development or deploy directly via the Cloudflare dashboard. Perfect for building modern, performant web applications at the edge.
-
-<!-- dash-content-end -->
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Wagmi
+- Ethers.js
+- React Query
+- React Router
 
 ## Getting Started
 
-To start a new project with this template, run:
+### Prerequisites
 
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/vite-react-template
+git clone https://github.com/polylender/dapp.git
+cd dapp
 ```
 
-A live deployment of this template is available at:
-[https://react-vite-template.templates.workers.dev](https://react-vite-template.templates.workers.dev)
-
-## Development
-
-Install dependencies:
-
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-Start the development server with:
-
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-Your application will be available at [http://localhost:5173](http://localhost:5173).
+The app will be available at http://localhost:3000
 
-## Production
+### Build
 
-Build your project for production:
+To build the app for production:
 
 ```bash
 npm run build
 ```
 
-Preview your build locally:
+### Testing
 
 ```bash
-npm run preview
+npm run test
 ```
 
-Deploy your project to Cloudflare Workers:
+### Linting
 
 ```bash
-npx wrangler deploy
+npm run lint
 ```
 
-## Additional Resources
+### Formatting
 
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Vite Documentation](https://vitejs.dev/guide/)
-- [React Documentation](https://reactjs.org/)
-- [Hono Documentation](https://hono.dev/)
+```bash
+npm run format
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the ISC License.
+
+## Contact
+
+Project Link: [https://github.com/polylender/dapp](https://github.com/polylender/dapp)

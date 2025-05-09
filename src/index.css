@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-polylender-purple text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 transition-opacity;
+  }
+  .btn-secondary {
+    @apply border-2 border-polylender-purple text-polylender-purple font-semibold py-2 px-4 rounded-lg hover:bg-polylender-purple hover:text-white transition-colors;
+  }
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+} 
