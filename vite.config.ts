@@ -15,6 +15,29 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    rollupOptions: {
+      external: [
+        '@reown/appkit-adapter-wagmi/*/AuthConnector',
+      ],
+      output: {
+        manualChunks: {
+          vendor: [
+            'react', 
+            'react-dom', 
+            'react-router-dom',
+            'framer-motion',
+            'ethers',
+          ],
+          wagmi: [
+            'wagmi',
+            '@wagmi/core',
+          ],
+        },
+      },
+    },
+    sourcemap: false,
+    commonjsOptions: {
+      esmExternals: true,
+    },
   },
 });
