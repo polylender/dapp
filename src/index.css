@@ -23,4 +23,119 @@
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+}
+
+/* Connect Wallet Button Container */
+.appkit-button-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  height: 40px;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.appkit-button-wrapper appkit-button {
+  width: 100%;
+  height: 100%;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  background: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+}
+
+/* Global wallet button styles */
+appkit-button,
+appkit-account-button,
+wui-account-button,
+wui-button,
+wui-connect-button,
+[data-testid="account-button"],
+[data-testid="button"] {
+  background: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Ensure all buttons inside appkit are styled */
+appkit-button button,
+appkit-account-button button,
+wui-account-button button,
+wui-connect-button button,
+[data-testid="button"] button {
+  background: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+  color: white !important;
+  border: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure text is visible */
+appkit-button span,
+appkit-button p,
+appkit-button div,
+wui-text,
+wui-account-button span,
+wui-account-button p,
+wui-account-button div,
+[data-testid="account-button"] span,
+[data-testid="account-button"] p,
+[data-testid="account-button"] div,
+[data-testid="button"] span,
+[data-testid="button"] p,
+[data-testid="button"] div {
+  color: white !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Add global styling through :root to affect shadow DOM through CSS variables */
+:root {
+  --w3m-accent-color: #8a2be2 !important;
+  --w3m-accent-fill-color: white !important;
+  --w3m-button-border-radius: 8px !important;
+  --w3m-background-color: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+  --w3m-container-opacity: 1 !important;
+  --w3m-container-visibility: visible !important;
+  --w3m-text-big-bold-color: white !important;
+  --w3m-text-medium-regular-color: white !important;
+  --w3m-text-small-regular-color: white !important;
+  --w3m-text-small-thin-color: white !important;
+  --w3m-text-xsmall-bold-color: white !important;
+  --w3m-text-xsmall-regular-color: white !important;
+  --w3m-color-fg-1: white !important;
+  --w3m-color-fg-2: white !important;
+  --w3m-color-fg-3: white !important;
+}
+
+/* Target the non-connected button */
+appkit-button:not([connected]):not([data-connected="true"]) button,
+appkit-button:not([connected]):not([data-connected="true"]) > div > button {
+  background: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+}
+
+/* Make the button visible in all cases */
+appkit-button:not([connected]):not([data-connected="true"]) {
+  border: 2px solid #8a2be2 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  background: linear-gradient(90deg, #8a2be2 0%, #7b68ee 100%) !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .appkit-button-wrapper,
+  .wallet-button-container {
+    min-width: 120px;
+  }
 } 

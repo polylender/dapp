@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useAccount } from 'wagmi';
+import { ConnectWallet } from '../components/ConnectWallet';
+
+const marketStats = [
+  { name: 'Total Market Size', value: '$5.2M', change: '+15.3%', changeType: 'increase' },
+  { name: 'Average Interest Rate', value: '8.5%', change: '-0.5%', changeType: 'decrease' },
+  { name: 'Active Lenders', value: '156', change: '+12', changeType: 'increase' },
+  { name: 'Default Rate', value: '0.8%', change: '-0.2%', changeType: 'decrease' },
+];
 
 const lendingSteps = [
   {
@@ -42,149 +50,140 @@ const lendingSteps = [
 ];
 
 export function Lend() {
+  const { isConnected } = useAccount();
+  const [formData, setFormData] = useState({
+    amount: '',
+    interest: '',
+    duration: '',
+    collateral: '',
+  });
+
+  if (!isConnected) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col items-center justify-center min-h-screen p-6"
+      >
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Connect Your Wallet</h2>
+        <p className="text-gray-600 mb-6">Please connect your wallet in the header to start lending</p>
+      </motion.div>
+    );
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
-    <div className="bg-white">
-      {/* Hero section */}
-      <div className="relative isolate overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
-          <motion.div
-            className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="mt-10 text-4xl font-bold tracking-tight text-polylender-black sm:text-6xl">
-              Start Lending on Polylender
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Earn interest on your assets by lending them directly to borrowers. Set your own terms and enjoy the benefits of decentralized lending.
-            </p>
-            <div className="mt-10 flex items-center gap-x-6">
-              <Link to="/dashboard" className="btn-primary">
-                Start Lending
-              </Link>
-              <Link to="/about" className="text-sm font-semibold leading-6 text-polylender-black">
-                Learn more <span aria-hidden="true">→</span>
-              </Link>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="bg-white p-6 rounded-lg shadow-lg"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Lending Offer</h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+                Amount to Lend
+              </label>
+              <input
+                type="number"
+                name="amount"
+                id="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                required
+              />
             </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* How it works section */}
-      <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-polylender-purple">How it works</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-polylender-black sm:text-4xl">
-            Start earning interest in 4 simple steps
-          </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Follow these steps to start lending on Polylender and earn interest on your assets.
-          </p>
-        </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2">
-            {lendingSteps.map((step) => (
-              <motion.div
-                key={step.name}
-                className="flex flex-col"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-polylender-black">
-                  <step.icon className="h-5 w-5 flex-none text-polylender-purple" aria-hidden="true" />
-                  {step.name}
-                </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                  <p className="flex-auto">{step.description}</p>
-                </dd>
-              </motion.div>
-            ))}
-          </dl>
-        </div>
-      </div>
-
-      {/* Benefits section */}
-      <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-polylender-purple">Benefits</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-polylender-black sm:text-4xl">
-            Why lend on Polylender?
-          </p>
-        </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-            <motion.div
-              className="flex flex-col"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div>
+              <label htmlFor="interest" className="block text-sm font-medium text-gray-700">
+                Interest Rate (%)
+              </label>
+              <input
+                type="number"
+                name="interest"
+                id="interest"
+                value={formData.interest}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="duration" className="block text-sm font-medium text-gray-700">
+                Duration (days)
+              </label>
+              <input
+                type="number"
+                name="duration"
+                id="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="collateral" className="block text-sm font-medium text-gray-700">
+                Required Collateral
+              </label>
+              <input
+                type="number"
+                name="collateral"
+                id="collateral"
+                value={formData.collateral}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              <dt className="text-base font-semibold leading-7 text-polylender-black">Set Your Terms</dt>
-              <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                <p className="flex-auto">
-                  Define your own lending terms including interest rates, duration, and collateral requirements.
-                </p>
-              </dd>
-            </motion.div>
+              Create Lending Offer
+            </button>
+          </form>
+        </motion.div>
 
-            <motion.div
-              className="flex flex-col"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <dt className="text-base font-semibold leading-7 text-polylender-black">Secure Collateral</dt>
-              <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                <p className="flex-auto">
-                  All loans are over-collateralized, ensuring the security of your principal.
-                </p>
-              </dd>
-            </motion.div>
-
-            <motion.div
-              className="flex flex-col"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <dt className="text-base font-semibold leading-7 text-polylender-black">No Intermediaries</dt>
-              <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                <p className="flex-auto">
-                  Lend directly to borrowers without any intermediaries or unnecessary fees.
-                </p>
-              </dd>
-            </motion.div>
-          </dl>
-        </div>
-      </div>
-
-      {/* CTA section */}
-      <div className="mx-auto mt-32 max-w-7xl sm:mt-56">
-        <div className="relative isolate overflow-hidden bg-polylender-purple px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
-          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Ready to start lending?
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
-            Connect your wallet and start earning interest on your assets today.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link
-              to="/dashboard"
-              className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-polylender-purple shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Start Lending
-            </Link>
-            <Link to="/about" className="text-sm font-semibold leading-6 text-white">
-              Learn more <span aria-hidden="true">→</span>
-            </Link>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="bg-white p-6 rounded-lg shadow-lg"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Market Overview</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800">Total Market Size</h3>
+              <p className="text-3xl font-bold text-indigo-600">$0.00</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800">Average Interest Rate</h3>
+              <p className="text-3xl font-bold text-indigo-600">0%</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800">Active Lenders</h3>
+              <p className="text-3xl font-bold text-indigo-600">0</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800">Default Rate</h3>
+              <p className="text-3xl font-bold text-indigo-600">0%</p>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

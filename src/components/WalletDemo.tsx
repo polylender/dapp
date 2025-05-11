@@ -1,37 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
 import './ConnectWallet.css';
 // ethereum type is defined in src/types/ethereum.d.ts
 
-const navigation = {
-  company: [
-    { name: 'About', href: '/about' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
-  ],
-  products: [
-    { name: 'Lend', href: '/lend' },
-    { name: 'Borrow', href: '/borrow' },
-    { name: 'Market', href: '/market' },
-    { name: 'Dashboard', href: '/dashboard' },
-  ],
-  support: [
-    { name: 'Help Center', href: '/help' },
-    { name: 'Documentation', href: '/docs' },
-    { name: 'FAQs', href: '/help' },
-  ],
-  legal: [
-    { name: 'Privacy', href: '/privacy' },
-    { name: 'Terms', href: '/terms' },
-    { name: 'Risk Disclosure', href: '/risk' },
-  ],
-};
-
-export default function Header() {
-  const location = useLocation();
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export function WalletDemo() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const walletContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize and configure the wallet button
@@ -47,6 +20,8 @@ export default function Header() {
       walletButton.setAttribute('network', 'polygon');
       walletButton.setAttribute('theme', 'dark');
       walletButton.setAttribute('size', 'md');
+      walletButton.setAttribute('display-balance', 'true');
+      walletButton.setAttribute('display-network', 'true');
       
       // Add to the DOM
       walletContainerRef.current.appendChild(walletButton);
@@ -62,10 +37,12 @@ export default function Header() {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts && accounts.length > 0) {
             setIsWalletConnected(true);
+            setWalletAddress(accounts[0]);
             return;
           }
         } catch (err) {
           setIsWalletConnected(false);
+          setWalletAddress(null);
         }
       }
 
@@ -75,8 +52,13 @@ export default function Header() {
         const isConnected = walletButton.hasAttribute('connected') || 
                            walletButton.getAttribute('data-connected') === 'true';
         setIsWalletConnected(isConnected);
+        const address = walletButton.getAttribute('address');
+        if (address) {
+          setWalletAddress(address);
+        }
       } else {
         setIsWalletConnected(false);
+        setWalletAddress(null);
       }
     };
 
@@ -90,10 +72,10 @@ export default function Header() {
     if (walletButton) {
       observer.observe(walletButton, { 
         attributes: true, 
-        attributeFilter: ['connected', 'data-connected'] 
+        attributeFilter: ['connected', 'data-connected', 'address'] 
       });
     }
-
+    
     // Listen for MetaMask account changes
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', checkWalletConnection);
@@ -111,52 +93,44 @@ export default function Header() {
     };
   }, []);
 
-  const toggleDropdown = (menu: string) => {
-    setOpenDropdown(openDropdown === menu ? null : menu);
-  };
-
-  // Handle navigation based on wallet connection
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isWalletConnected && 
-        (e.currentTarget.getAttribute('href') === '#dashboard' || 
-         e.currentTarget.getAttribute('href') === '#transactions')) {
-      e.preventDefault();
-      alert("Please connect your wallet to access this feature");
-    }
-  };
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-black text-white border-b border-gray-800 shadow-sm px-6 flex items-center justify-between">
-      {/* Left: Logo */}
-      <a href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                Polylender
-              </span>
-      </a>
-
-      {/* Center: Menu (hidden on small screens) */}
-      <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-6 font-medium text-base">
-        <a 
-          href="#dashboard" 
-          className={`hover:underline ${!isWalletConnected ? 'opacity-50' : ''}`}
-          onClick={handleNavClick}
-        >
-          Dashboard
-        </a>
-        <a 
-          href="#transactions" 
-          className={`hover:underline ${!isWalletConnected ? 'opacity-50' : ''}`}
-          onClick={handleNavClick}
-        >
-          Transactions
-        </a>
-        <a href="#help" className="hover:underline">Help</a>
-              </div>
-              
-      {/* Right: Wallet connect button */}
-      <div className="min-w-[140px] flex justify-end">
+    <div className="wallet-demo p-8 rounded-lg bg-gradient-to-r from-purple-800 to-blue-900 shadow-xl max-w-md mx-auto my-8">
+      <h2 className="text-2xl font-bold mb-6 text-center text-white">
+        Wallet Connection Demo
+      </h2>
+      
+      <div className="flex justify-center mb-6">
         <div ref={walletContainerRef} className="wallet-button-container"></div>
+      </div>
+      
+      {isWalletConnected && walletAddress && (
+        <div className="bg-gray-900 bg-opacity-50 p-4 rounded-lg text-white">
+          <h3 className="text-lg font-semibold mb-2">Connected Account</h3>
+          <div className="overflow-hidden text-ellipsis">
+            <span className="font-mono text-sm bg-gray-800 px-2 py-1 rounded">
+              {walletAddress}
+            </span>
           </div>
-    </header>
+          
+          <div className="mt-6 text-gray-300 text-center text-sm">
+            <p>Your wallet is now connected!</p>
+            <p>The button above provides full wallet functionality:</p>
+            <ul className="mt-2 list-disc list-inside">
+              <li>Network switching</li>
+              <li>Balance display</li>
+              <li>Send/receive tokens</li>
+              <li>Swap tokens</li>
+              <li>Buy crypto</li>
+            </ul>
+          </div>
+        </div>
+      )}
+      
+      {!isWalletConnected && (
+        <div className="text-center text-gray-300">
+          <p>Click the button above to connect your wallet</p>
+        </div>
+      )}
+    </div>
   );
 } 

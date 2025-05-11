@@ -7,6 +7,6 @@ interface Env {
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.get("/api/", (c: Context) => c.json({ name: "Cloudflare" }));
+app.get("/api/", (c: Context) => c.json({ name: "Polylender" }));
 
 export default app;

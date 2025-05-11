@@ -1,0 +1,95 @@
+/* ConnectWallet.css */
+.wallet-connection,
+.wallet-button-container {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 140px;
+}
+
+.appkit-button-wrapper {
+  width: auto;
+  min-width: 140px;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ===== DIRECT TARGETING OF BUTTON COLORS ===== */
+
+/* Force the button to have violet color in all states */
+wui-connect-button[data-testid="connect-button"],
+button[data-testid="button"],
+wui-connect-button,
+wui-button[data-variant="fill"],
+wui-account-button,
+appkit-button button,
+w3m-core-button,
+[data-testid="account-button"] {
+  background: #8a2be2 !important; /* Flat violet color */
+  border-radius: 50px !important; /* Semi-circle shape */
+  box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: none !important;
+}
+
+/* Force all text to be white */
+wui-account-button wui-text,
+wui-account-button wui-flex,
+wui-connect-button wui-text,
+wui-connect-button wui-flex,
+wui-account-button div,
+wui-account-button span,
+wui-account-button p,
+wui-connect-button div,
+wui-connect-button span,
+wui-connect-button p,
+[data-testid="account-button"] span,
+[data-testid="account-button"] div,
+w3m-address-text,
+w3m-address-text div,
+w3m-address-text span,
+button[data-testid="button"] div,
+button[data-testid="button"] span {
+  color: white !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* CSS variables to control colors in web3modal components */
+:root {
+  --w3m-accent-color: #8a2be2 !important; /* Flat violet color */
+  --w3m-accent-fill-color: white !important;
+  --w3m-background-color: #8a2be2 !important; /* Flat violet color */
+  --w3m-container-border-radius: 50px !important; /* Semi-circle shape */
+  
+  /* Force all text colors to white */
+  --w3m-text-big-bold-color: white !important;
+  --w3m-text-medium-regular-color: white !important;
+  --w3m-text-small-regular-color: white !important;
+  --w3m-text-small-thin-color: white !important;
+  --w3m-text-xsmall-bold-color: white !important;
+  --w3m-text-xsmall-regular-color: white !important;
+  --w3m-color-fg-1: white !important;
+  --w3m-color-fg-2: white !important;
+  --w3m-color-fg-3: white !important;
+  
+  /* Ensure connected button has proper colors */
+  --wui-color-accent-100: #8a2be2 !important; /* Flat violet color */
+  --wui-color-accent-090: #8a2be2 !important; /* Flat violet color */
+  --wui-color-accent-080: #8a2be2 !important; /* Flat violet color */
+  --wui-color-bg-100: #8a2be2 !important; /* Flat violet color */
+  --wui-color-fg-100: white !important;
+  --wui-color-fg-200: white !important;
+  --wui-color-fg-300: white !important;
+  --wui-border-radius-button: 50px !important; /* Semi-circle shape */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .appkit-button-wrapper,
+  .wallet-button-container {
+    min-width: 120px;
+  }
+} 

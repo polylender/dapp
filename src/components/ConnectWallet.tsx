@@ -1,98 +1,160 @@
-import React, { useState } from 'react';
-import { useConnect, useAccount } from 'wagmi';
-import { createConfig, http } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
-import { injected, metaMask, walletConnect, coinbaseWallet } from 'wagmi/connectors';
-import { Loading } from './Loading';
-
-interface WalletOption {
-  id: string;
-  name: string;
-  icon: string;
-  connector: any;
-}
-
-const walletOptions: WalletOption[] = [
-  {
-    id: 'injected',
-    name: 'Browser Wallet',
-    icon: '🌐',
-    connector: injected(),
-  },
-  {
-    id: 'metaMask',
-    name: 'MetaMask',
-    icon: '🦊',
-    connector: metaMask(),
-  },
-  {
-    id: 'walletConnect',
-    name: 'WalletConnect',
-    icon: '🔗',
-    connector: walletConnect({ projectId: import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID }),
-  },
-  {
-    id: 'coinbaseWallet',
-    name: 'Coinbase Wallet',
-    icon: '💰',
-    connector: coinbaseWallet({ appName: 'Polylender' }),
-  },
-];
+import React, { useEffect, useRef } from 'react';
+import './ConnectWallet.css';
 
 export function ConnectWallet() {
-  const { connect, isPending, error } = useConnect();
-  const { address, isConnected } = useAccount();
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
-  const handleConnect = async (connector: any) => {
-    try {
-      setSelectedWallet(connector.id);
-      await connect({ connector });
-    } catch (err) {
-      console.error('Connection error:', err);
-    }
-  };
+  useEffect(() => {
+    // Function to directly style wallet button elements
+    const styleWalletUI = () => {
+      // Target all possible web3modal elements in the DOM
+      const webModalElements = document.querySelectorAll(
+        'w3m-core-button, wui-connect-button, wui-account-button, button[data-testid="button"]'
+      );
+      
+      // Apply flat violet color directly to all found elements
+      webModalElements.forEach((el: Element) => {
+        (el as HTMLElement).style.background = '#8a2be2';
+        (el as HTMLElement).style.borderRadius = '50px';
+        (el as HTMLElement).style.boxShadow = '0 2px 8px rgba(138, 43, 226, 0.5)';
+        (el as HTMLElement).style.border = 'none';
+      });
+      
+      // Find all text elements inside web3modal components
+      const textElements = document.querySelectorAll(
+        'wui-text, wui-flex, w3m-address-text, w3m-address-text span, w3m-address-text div'
+      );
+      
+      // Force all text to white
+      textElements.forEach((el: Element) => {
+        (el as HTMLElement).style.color = 'white';
+        (el as HTMLElement).style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.2)';
+        (el as HTMLElement).style.fontWeight = '500';
+      });
+      
+      // Apply styles to shadow DOM elements
+      document.querySelectorAll('*').forEach((host: Element) => {
+        if ((host as any).shadowRoot) {
+          try {
+            const shadowRoot = (host as any).shadowRoot;
+            
+            // Add style to shadow DOM
+            const styleTag = document.createElement('style');
+            styleTag.textContent = `
+              /* Force all web3modal buttons to have violet color */
+              wui-connect-button, 
+              wui-account-button,
+              wui-button[data-variant="fill"],
+              button[data-testid="button"],
+              w3m-core-button,
+              [data-testid="account-button"] {
+                background: #8a2be2 !important;
+                border-radius: 50px !important;
+                box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+                border: none !important;
+              }
+              
+              /* Force all text to be white */
+              wui-text, 
+              wui-flex,
+              w3m-address-text,
+              span, div, p {
+                color: white !important;
+                font-weight: 500 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+              }
+            `;
+            shadowRoot.appendChild(styleTag);
+            
+            // Apply direct styles to all elements in shadow DOM
+            const shadowButtons = shadowRoot.querySelectorAll(
+              'wui-connect-button, wui-account-button, button[data-testid="button"]'
+            );
+            
+            shadowButtons.forEach((el: Element) => {
+              (el as HTMLElement).style.background = '#8a2be2';
+              (el as HTMLElement).style.borderRadius = '50px';
+              (el as HTMLElement).style.boxShadow = '0 2px 8px rgba(138, 43, 226, 0.5)';
+              (el as HTMLElement).style.border = 'none';
+            });
+            
+            const shadowText = shadowRoot.querySelectorAll(
+              'wui-text, wui-flex, span, div, p, w3m-address-text'
+            );
+            
+            shadowText.forEach((el: Element) => {
+              (el as HTMLElement).style.color = 'white';
+              (el as HTMLElement).style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.2)';
+              (el as HTMLElement).style.fontWeight = '500';
+            });
+          } catch (e) {
+            // Ignore errors accessing shadow DOM
+          }
+        }
+      });
+    };
+    
+    // Configure appkit-button when component mounts
+    const configureButton = () => {
+      const container = buttonRef.current;
+      if (!container) return;
 
-  if (isConnected) {
-    return (
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">
-          {address?.slice(0, 6)}...{address?.slice(-4)}
-        </span>
-      </div>
-    );
-  }
+      // Clear any existing content
+      container.innerHTML = '';
+
+      // Create the appkit-button element
+      const button = document.createElement('appkit-button');
+      
+      // Set preferred network (Polygon)
+      button.setAttribute('network', 'polygon');
+      
+      // Set button styles directly - flat violet color
+      button.setAttribute('style', `
+        background: #8a2be2 !important;
+        border-radius: 50px !important;
+        box-shadow: 0 2px 8px rgba(138, 43, 226, 0.5) !important;
+        border: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      `);
+      
+      // Append button to container
+      container.appendChild(button);
+      
+      // Style all web3modal elements
+      styleWalletUI();
+      
+      // Watch for button changes to re-apply styles
+      const observer = new MutationObserver(() => {
+        styleWalletUI();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
+      
+      // Run style application repeatedly to ensure components are styled
+      const styleInterval = setInterval(styleWalletUI, 500);
+      
+      // Stop repeated styling after 60 seconds
+      setTimeout(() => clearInterval(styleInterval), 60000);
+    };
+
+    configureButton();
+
+    // Cleanup function
+    return () => {
+      if (buttonRef.current) {
+        buttonRef.current.innerHTML = '';
+      }
+    };
+  }, []);
 
   return (
-    <div className="relative">
-      <button
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        onClick={() => {}}
-      >
-        Connect Wallet
-      </button>
-
-      <div className="absolute right-0 w-48 mt-2 bg-white rounded-lg shadow-lg">
-        <div className="py-1">
-          {walletOptions.map((wallet) => (
-            <button
-              key={wallet.id}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={() => handleConnect(wallet.connector)}
-              disabled={isPending}
-            >
-              <span className="mr-2">{wallet.icon}</span>
-              {wallet.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {error && (
-        <div className="mt-2 text-sm text-red-600">
-          {error.message}
-        </div>
-      )}
+    <div className="wallet-connection">
+      <div ref={buttonRef} className="appkit-button-wrapper"></div>
     </div>
   );
 } 
